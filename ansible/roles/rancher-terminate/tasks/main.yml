@@ -1,0 +1,5 @@
+---
+- name: tear down stack
+  cloudformation:
+    stack_name: "{{platform}}-{{env}}-farm"
+    state:      absent
