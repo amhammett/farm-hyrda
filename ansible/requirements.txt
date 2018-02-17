@@ -1,4 +1,9 @@
+# aws
 ansible
 ansible-vault
 boto
 boto3
+
+# dev
+autoenv
+watchdog
