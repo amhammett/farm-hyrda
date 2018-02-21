@@ -2,12 +2,20 @@
 
 platform: rancher
 
+vpc_lookup:
+  default: dev
+
+dyn_vpc_lookup: "{{vpc_lookup['env']|default(vpc_lookup['default'])}}"
+
 service:
   farm:
     port_internal:
       default: 8080
     port_exposed:
       default: 80
+    disk_size:
+      default: 40
 
-dyn_farm_port_exposed: "{{service['farm']['port_exposed'][env]|default(service['farm']['port_exposed']['default'])}}"
+dyn_farm_port_exposed:  "{{service['farm']['port_exposed'][env]|default(service['farm']['port_exposed']['default'])}}"
 dyn_farm_port_internal: "{{service['farm']['port_internal'][env]|default(service['farm']['port_internal']['default'])}}"
+dyn_farm_disk_size:     "{{service['farm']['disk_size'][env]|default(service['farm']['disk_size']['default'])}}"
