@@ -3,7 +3,7 @@ env := missing
 account := dev
 region := us-west-2
 
-ansible_cmd = AWS_PROFILE=$(account) AWS_DEFAULT_REGION=$(region) ./venv/bin/ansible-playbook -e ansible_python_interpreter=./venv/bin/python
+ansible_cmd = AWS_PROFILE=$(account) AWS_DEFAULT_REGION=$(region) ./venv/bin/ansible-playbook
 farm_vars = -e env=$(env) -e account=$(account) $(debug)
 
 venv:
