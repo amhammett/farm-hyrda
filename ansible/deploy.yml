@@ -1,0 +1,36 @@
+---
+- name: Rancher Stack
+  hosts: localhost
+
+  connection: local
+
+  vars_files:
+    - ./vars/common.yml
+
+  roles:
+    - rancher-stack
+
+- name: Configure Stack
+  hosts: "tag_platform_rancher:&tag_service_farm:&tag_environment_{{env}}"
+
+  gather_facts: false
+
+  vars_files:
+    - ./vars/common.yml
+
+  pre_tasks:
+    - name: python2.7 status
+      raw: /usr/bin/python --version
+      changed_when: false
+      ignore_errors: true
+      register: raw_python
+    - name: install python 2.7
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      become: yes
+      when: raw_python|failed
+    - name: gather facts
+      setup:
+
+  roles:
+    - docker
+    - rancher-deploy
