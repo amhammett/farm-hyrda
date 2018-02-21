@@ -1,0 +1,24 @@
+---
+- name: rancher systemd
+  template:
+    src:   rancher.service.j2
+    dest:  /etc/systemd/system/rancher.service
+    owner: root
+    group: root
+    mode:  0644
+  become: yes
+
+- name: rancher service
+  service:
+    name:  rancher
+    state: started
+  become: yes
+
+- name: verify rancher is running
+  uri:
+    url:         "http://localhost:{{dyn_farm_port_exposed}}"
+    status_code: 200
+  register: uri_index
+  until: uri_index.status == 200
+  retries: 5
+  delay: 30

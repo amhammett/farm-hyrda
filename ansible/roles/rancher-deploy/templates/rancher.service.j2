@@ -1,0 +1,12 @@
+[Unit]
+Description=Rancher Service 
+After=docker.service
+Requires=docker.service
+ 
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStart=/usr/bin/docker run --name %n --restart=unless-stopped -p {{dyn_farm_port_exposed}}:{{dyn_farm_port_internal}} rancher/server:stable
+ 
+[Install]
+WantedBy=multi-user.target
