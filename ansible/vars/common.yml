@@ -1,3 +1,13 @@
 ---
 
 platform: rancher
+
+service:
+  farm:
+    port_internal:
+      default: 8080
+    port_exposed:
+      default: 80
+
+dyn_farm_port_exposed: "{{service['farm']['port_exposed'][env]|default(service['farm']['port_exposed']['default'])}}"
+dyn_farm_port_internal: "{{service['farm']['port_internal'][env]|default(service['farm']['port_internal']['default'])}}"
