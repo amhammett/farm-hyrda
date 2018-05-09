@@ -6,7 +6,16 @@
     owner: root
     group: root
     mode:  0644
+  register: rancher_systemd
   become: yes
+
+- name: restart service
+  service:
+    name:  rancher
+    state: restarted
+  when: rancher_systemd|changed
+  become: yes
+
 
 - name: rancher service
   service:

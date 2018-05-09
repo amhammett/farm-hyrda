@@ -10,6 +10,7 @@ venv:
 	virtualenv venv
 
 install: | venv
+	./venv/bin/pip install -I pip
 	./venv/bin/pip install -r requirements.txt
 
 deploy:

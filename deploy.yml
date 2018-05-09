@@ -8,6 +8,8 @@
     - ./vars/common.yml
 
   roles:
+    - ec2-key
+    - vpc-meta
     - rancher-stack
 
 - name: Configure Stack
