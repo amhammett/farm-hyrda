@@ -12,13 +12,15 @@
   register: ec2_subnet_facts
 
 - name: ubuntu 16 ami
-  ec2_ami_find:
-    name:       "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"
-    owner:      099720109477
-    sort:       name
-    sort_order: descending
-    sort_end:   1
-  register: ami_find
+  ec2_ami_facts:
+    owners: 099720109477
+    filters:
+      name: "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"
+  register: ec2_ami_facts
+
+- name: define desired ami
+  set_fact:
+    latest_ami: "{{ec2_ami_facts.images|sort(attribute='creation_date')|last}}"
 
 - name: default security group rules
   set_fact:
@@ -41,7 +43,7 @@
 - name: add rules for ssh
   set_fact:
     security_group_rules: >
-      {{security_group_rules}} + 
+      {{security_group_rules}} +
       [
         { 'proto': 'tcp', 'from_port': '22', 'to_port': '22', 'cidr_ip': '{{item|ipsubnet(16)}}' }
       ]

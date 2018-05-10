@@ -6,19 +6,19 @@
   register: ec2_vpc_facts
 
 - name: lookup ec2 instance
-  ec2_remote_facts:
+  ec2_instance_facts:
     filters:
       instance-state-name: running
-      "tag:environment": "{{env}}"
-      "tag:platform":    "{{platform}}"
-      "tag:service":     farm
-      vpc-id: "{{ec2_vpc_facts.vpcs[0].id}}"
+      "tag:environment":   "{{env}}"
+      "tag:platform":      "{{platform}}"
+      "tag:service":       farm
+      vpc-id:              "{{ec2_vpc_facts.vpcs[0].id}}"
   register: ec2_instances
 
 - name: ec2 instance
   ec2:
     state:        absent
-    instance_ids: "{{item.id}}"
+    instance_ids: "{{item.instance_id}}"
     wait:         yes
   with_items: "{{ec2_instances.instances}}"
 

@@ -2,7 +2,7 @@
 - name: remove legacy docker
   apt:
     name: "{{item}}"
-    state: removed
+    state: absent
   become: yes
   with_items:
     - docker
@@ -12,7 +12,7 @@
 - name: install docker requirements
   apt:
     name:  "{{item}}"
-    state:  installed
+    state:  present
     update_cache: yes
   become: yes
   with_items:
@@ -40,12 +40,12 @@
 
 - name: install docker community edition
   apt:
-    state: installed
     name:  docker-ce
+    state: present
   become: yes
   register: apt_docker_install
 
 - name: validate docker install
   shell: docker run hello-world
   become: yes
-  when: apt_docker_install|changed
+  when: apt_docker_install is changed

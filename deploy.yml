@@ -8,7 +8,7 @@
     - ./vars/common.yml
 
   roles:
-    - ec2-key
+    - ec2-security
     - vpc-meta
     - rancher-stack
 
@@ -20,18 +20,18 @@
   vars_files:
     - ./vars/common.yml
 
-  pre_tasks:
-    - name: python2.7 status
-      raw: /usr/bin/python --version
-      changed_when: false
-      ignore_errors: true
-      register: raw_python
-    - name: install python 2.7
-      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
-      become: yes
-      when: raw_python|failed
-    - name: gather facts
-      setup:
+#  pre_tasks:
+#    - name: python2.7 status
+#      raw: /usr/bin/python --version
+#      changed_when: false
+#      ignore_errors: true
+#      register: raw_python
+#    - name: install python 2.7
+#      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+#      become: yes
+#      when: raw_python|failed
+#    - name: gather facts
+#      setup:
 
   roles:
     - docker

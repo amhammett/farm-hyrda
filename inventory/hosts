@@ -5,6 +5,7 @@ all:
     tag_platform_rancher:
       vars:
         ansible_ssh_private_key_file: ~/.ssh/id_rsa-{{platform}}-{{env}}
+        ansible_python_interpreter: /usr/bin/python3
     localhost:
       vars:
         ansible_python_interpreter: ./venv/bin/python

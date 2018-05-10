@@ -1,13 +1,4 @@
 ---
-- name: ubuntu 16 ami
-  ec2_ami_find:
-    name:       "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"
-    owner:      099720109477
-    sort:       name
-    sort_order: descending
-    sort_end:   1
-  register: ami_find
-
 - name: security group
   ec2_group:
     name:        "{{platform}}-{{env}}-farm"
@@ -16,7 +7,7 @@
     rules:       "{{security_group_rules}}"
 
 - name: lookup ec2 instance
-  ec2_remote_facts:
+  ec2_instance_facts:
     filters:
       instance-state-name: running
       "tag:environment":   "{{env}}"
@@ -28,8 +19,8 @@
   ec2:
     key_name:         "{{platform}}-{{env}}"
     group:            "{{platform}}-{{env}}-farm"
-    instance_type:    t2.small
-    image:            "{{ami_find.results[0].ami_id}}"
+    instance_type:    t2.large
+    image:            "{{latest_ami.image_id}}"
     wait:             yes
     instance_tags:
        environment: "{{env}}"
@@ -47,14 +38,14 @@
 
 - name: clear cache
   shell: "AWS_PROFILE={{lookup('env','AWS_PROFILE')}} ./inventory/ec2.py --refresh-cache"
-  when: ec2_instance|changed
+  when: ec2_instance is changed
 
 - name: wait for host to be available
   wait_for:
     host:    "{{ec2_instance.instances[0].private_ip}}"
     port:    22
     timeout: 60
-  when: ec2_instance|changed
+  when: ec2_instance is changed
 
 - name: clear cache
   shell: "AWS_PROFILE={{lookup('env','AWS_PROFILE')}} ./inventory/ec2.py --refresh-cache"
@@ -62,7 +53,7 @@
   until: "ec2_instance.instances[0].private_ip in (shell_refresh_cache['stdout']|from_json)['ec2']"
   retries: 6
   delay: 30
-  when: ec2_instance|changed
+  when: ec2_instance is changed
 
 - name: refresh meta
   meta: refresh_inventory

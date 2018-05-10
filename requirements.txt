@@ -3,6 +3,7 @@ ansible
 ansible-vault
 boto
 boto3
+netaddr
 
 # dev
 autoenv
